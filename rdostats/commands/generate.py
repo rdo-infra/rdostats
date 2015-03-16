@@ -23,7 +23,7 @@ class Generate(Command):
         return p
 
     def take_action(self, args):
-        basedir =self.app.config['basedir']
+        basedir = self.app.config['basedir']
 
         if not args.template_dir:
             args.template_dir = self.app.config.get('template_dir')

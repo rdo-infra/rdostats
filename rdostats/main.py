@@ -1,12 +1,9 @@
-#!/usr/bin/python
-
-import os
 import sys
-import argparse
 import yaml
 
 from cliff.app import App
 from cliff.commandmanager import CommandManager
+
 
 class RDOStats(App):
     def __init__(self):

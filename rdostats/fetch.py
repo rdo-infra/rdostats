@@ -1,10 +1,4 @@
-#!/usr/bin/python
-
-import os
-import sys
 import bugzilla
-import json
-import xmlrpclib
 import arrow
 
 import defaults

@@ -5,7 +5,6 @@ import json
 import xmlrpclib
 from cliff.command import Command
 
-from rdostats.rdostats import RDOStats
 from rdostats.fetch import fetch_bugs
 
 
@@ -25,8 +24,8 @@ class Fetch(Command):
     def take_action(self, args):
         date = arrow.now().format('YYYYMMDD')
         data = fetch_bugs(
-            url = self.app.config['bugzilla']['url'],
-            product = self.app.config['bugzilla']['product'],
+            url=self.app.config['bugzilla']['url'],
+            product=self.app.config['bugzilla']['product'],
             )
 
         workdir = os.path.join(self.app.config['basedir'], date)

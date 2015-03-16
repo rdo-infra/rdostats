@@ -1,15 +1,11 @@
-#!/usr/bin/python
-
-import os
-import sys
-import argparse
-import json
 import jinja2
 import arrow
 import mistune
+import logging
 
-from compstats import component_graph
 import defaults
+
+LOG = logging.getLogger(__name__)
 
 
 def filter_format_date(value, format='YYYY-MM-DD'):
@@ -85,5 +81,3 @@ class RDOStats (object):
     def components(self, status=None):
         return set(bug['component'] for bug in self.current['bugs']
                    if (status is None or bug['status'] in status))
-
-
