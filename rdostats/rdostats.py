@@ -9,11 +9,7 @@ import arrow
 import mistune
 
 from compstats import component_graph
-
-default_status_open = ['NEW', 'ASSIGNED', 'ON_DEV']
-default_status_fixed = ['MODIFIED', 'POST', 'ON_QA']
-default_template_dir = './templates'
-default_output_dir = './reports'
+import defaults
 
 
 def filter_format_date(value, format='YYYY-MM-DD'):
@@ -50,16 +46,14 @@ class RDOStats (object):
                  status_open=None,
                  status_fixed=None,
                  template_dir=None,
-                 output_dir=None,
                  attributes=None):
 
         self.current = current
         self.previous = previous
 
-        self.status_open = status_open or default_status_open
-        self.status_fixed = status_fixed or default_status_fixed
-        self.template_dir = template_dir or default_template_dir
-        self.output_dir = output_dir or default_output_dir
+        self.status_open = status_open or defaults.status_open
+        self.status_fixed = status_fixed or defaults.status_fixed
+        self.template_dir = template_dir or defaults.template_dir
         self.attributes = attributes
 
         self.setup_templates()

@@ -18,11 +18,15 @@ class Generate(Command):
                        action='store_true')
         p.add_argument('--latest', '-l',
                        action='store_true')
+        p.add_argument('--template-dir', '-T')
         p.add_argument('data', nargs='?')
         return p
 
     def take_action(self, args):
         basedir =self.app.config['basedir']
+
+        if not args.template_dir:
+            args.template_dir = self.app.config.get('template_dir')
 
         if args.data is None:
             date = arrow.now()
@@ -39,7 +43,9 @@ class Generate(Command):
             os.makedirs(workdir)
 
         attributes = self.app.config.get('report_attributes', {})
-        report = RDOStats(data, attributes=attributes)
+        report = RDOStats(data,
+                          template_dir=args.template_dir,
+                          attributes=attributes)
 
         if args.graph:
             report.attributes['graph'] = component_graph(report,
