@@ -31,6 +31,9 @@
                 |pluralize('bug', 'bugs')}})</h3>
 
 <table style="max-width: 960px">
+  <tr>
+    <th>ID</th><th>Status</th><th>Component</th><th>Last activitity</th>
+  </tr>
 {% for bug in report.bugs(comp, status=status) %}
 {{ macros.show_bug(bug) }}
 {% endfor %}
