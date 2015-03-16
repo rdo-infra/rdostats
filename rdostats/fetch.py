@@ -4,9 +4,23 @@ import arrow
 import defaults
 
 fields = [
-    'id', 'status', 'component', 'summary', 'assigned_to',
-    'creator', 'creation_time', 'last_change_time',
-    'keywords', 'url',
+    'assigned_to',
+    'component',
+    'creation_time',
+    'creator',
+    'creator',
+    'depends_on',
+    'fixed_in',
+    'id',
+    'keywords',
+    'last_change_time',
+    'status',
+    'summary',
+    'target_milestone',
+    'target_release',
+    'url',
+    'version',
+    'weburl',
 ]
 
 
