@@ -1,8 +1,20 @@
 # {{report.metadata.product}} Bugs on {{report.metadata.date|format_date}}
 
+{% filter fill -%}
+This email summarizes the active {{report.metadata.product}} bugs
+listed in the Red Hat Bugzilla database at
+<https://bugzilla.redhat.com/>.
+{% endfilter %}
+
 You can find an HTML version of this report online at:
-<{{report.attributes.base_url}}/{{report.metadata.date|
-  format_date('YYYYMMDD')}}/>
+
+  <{{report.attributes.base_url}}/{{report.metadata.date|
+  format_date('YYYYMMDD')}}/>.
+
+To report a new bug against {{report.metadata.product}}, go to:
+
+  <https://bugzilla.redhat.com/enter_bug.cgi?product={{
+    report.metadata.product}}>
 
 ## Summary
 
