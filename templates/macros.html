@@ -1,0 +1,12 @@
+{% macro show_bug(bug) %}
+<tr>
+<td><a href="http://bugzilla.redhat.com/{{bug.id}}">{{bug.id}}</a></td>
+<td>{{bug.status}}</td>
+<td><a href="report-{{bug.component}}.html">{{bug.component}}</a></td>
+<td>{{bug.last_change_time|format_date}}</td>
+</tr>
+<tr>
+<td></td>
+<td colspan="3">{{bug.summary}}</td>
+</tr>
+{% endmacro %}

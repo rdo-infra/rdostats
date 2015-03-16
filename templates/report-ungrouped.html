@@ -1,0 +1,49 @@
+{% extends 'page.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}
+{{report.metadata.product}} Bugs on {{report.metadata.date|format_date}}
+{% endblock %}
+
+
+{% block content %}
+{% filter markdown %}
+
+## Summary
+
+- [Open](#open) ({{report.status_open|join(', ')}}): {{
+  report.bugs(component=component, status=report.status_open)|iter_count}}
+- [Fixed](#fixed) ({{report.status_fixed|join(', ')}}): {{
+  report.bugs(component=component, status=report.status_fixed)|iter_count}}
+{% endfilter %}
+
+{% macro section(name, status) -%}
+<h2 id="{{name|lower}}">{{name}} bugs</h2>
+
+{% filter markdown %}{{caller()|trim}}{% endfilter %}
+
+({{report.bugs(component=component, status=status)|iter_count|pluralize('bug', 'bugs')}})
+
+<table style="max-width: 960px">
+{% for bug in report.bugs(component=component, status=status) %}
+{{ macros.show_bug(bug) }}
+{% endfor %}
+</table>
+{% endmacro -%}
+
+{% call section('Open', report.status_open) -%}
+{% if component %}This is a list of "open" bugs in the "{{component}}"
+component.{% else %}This is a list of "open" bugs by component.{% endif %}
+An "open" bug is in state
+{{report.status_open|join(', ')}} and has not yet been fixed.
+{% endcall %}
+
+{% call section('Fixed', report.status_fixed) -%}
+{% if component %}This is a list of "fixed" bugs in the "{{component}}"
+component.{% else %}This is a list of "fixed" bugs by component.{% endif %}
+A "fixed" bug is fixed state
+{{report.status_fixed|join(', ')}} and has been fixed.  You can help
+out by testing the fix to make sure it works as intended.
+{% endcall %}
+{% endblock %}
+

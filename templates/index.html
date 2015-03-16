@@ -1,0 +1,33 @@
+{% extends 'page.html' %}
+
+{% block title %}{{report.metadata.product}} bug reports
+for {{report.metadata.date|format_date}}{% endblock %}
+{% block content %}
+{% filter markdown %}
+## Summary
+
+{{
+report.bugs(status=report.status_open)|iter_count}} open, {{
+report.bugs(status=report.status_fixed)|iter_count}} fixed
+
+- [All bugs](report-ungrouped.html)
+- [All bugs](report-grouped.html) (grouped by component)
+
+{% if report.attributes.graph %}
+## Number of bugs by component
+
+{% filter markdown %}
+{{report.attributes.graph|indent(4, indentfirst=True)}}
+{% endfilter %}
+
+{% endif -%}
+## Reports by component
+
+{% for comp in report.components()|sort -%}
+- [{{comp}}](report-{{comp}}.html) ({{
+report.bugs(component=comp, status=report.status_open)|iter_count}} open, {{
+report.bugs(component=comp, status=report.status_fixed)|iter_count}} fixed)
+{% endfor %}
+
+{% endfilter %}
+{% endblock %}

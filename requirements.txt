@@ -1,0 +1,7 @@
+python-bugzilla
+mistune
+arrow
+jinja2
+requests
+cliff
+PyYAML

@@ -1,0 +1,52 @@
+# {{report.metadata.product}} Bugs on {{report.metadata.date|format_date}}
+
+You can find an HTML version of this report online at:
+<{{report.attributes.base_url}}/{{report.metadata.date|
+  format_date('YYYYMMDD')}}/>
+
+## Summary
+
+- Open ({{report.status_open|join(', ')}}): {{
+  report.bugs(status=report.status_open)|iter_count}}
+- Fixed ({{report.status_fixed|join(', ')}}): {{
+  report.bugs(status=report.status_fixed)|iter_count}}
+
+{% if report.attributes.graph %}
+## Number of open bugs by component
+
+{{report.attributes.graph|indent(4, indentfirst=True)}}
+
+{% endif -%}
+
+{% macro section(name, status) -%}
+## {{name}} bugs
+
+{{caller()|trim}}
+
+({{report.bugs(status=status)|iter_count|pluralize('bug', 'bugs')}})
+
+{% for comp in report.components()|sort -%}
+{% set comp_count = report.bugs(comp, status=status)|iter_count -%}
+{% if comp_count > 0 %}
+### {{comp}} ({{report.bugs(comp, status=status)
+                |iter_count|pluralize('bug', 'bugs')}})
+
+{% for bug in report.bugs(comp, status=status) %}
+[{{"%-8s"|format(bug.id)}}] http://bugzilla.redhat.com/{{bug.id}} ({{bug.status}})  
+           Component: {{bug.component}}  
+           Last change: {{bug.last_change_time|format_date}} ({{bug.last_change_time|humanize}})
+           Summary: {{bug.summary |
+                      wordwrap(width=55, wrapstring='\n' + ' '*20)}}  
+{% endfor %}{% endif %}{% endfor %}{% endmacro -%}
+
+{% call section('Open', report.status_open) -%}
+This is a list of "open" bugs by component.  An "open" bug is in state
+{{report.status_open|join(', ')}} and has not yet been fixed.
+{% endcall %}
+
+{% call section('Fixed', report.status_fixed) -%}
+This is a list of "fixed" bugs by component.  A "fixed" bug is fixed state
+{{report.status_fixed|join(', ')}} and has been fixed.  You can help
+out by testing the fix to make sure it works as intended.
+{% endcall %}
+
