@@ -2,10 +2,15 @@ import jinja2
 import arrow
 import mistune
 import logging
+import textwrap
 
 import defaults
 
 LOG = logging.getLogger(__name__)
+
+
+def filter_fill(value, width=75, **kwargs):
+    return textwrap.fill(value, width=width, **kwargs)
 
 
 def filter_format_date(value, format='YYYY-MM-DD'):
@@ -64,6 +69,7 @@ class RDOStats (object):
         self.env.filters['iter_count'] = filter_iter_count
         self.env.filters['pluralize'] = filter_pluralize
         self.env.filters['markdown'] = filter_markdown
+        self.env.filters['fill'] = filter_fill
 
     def process_data(self):
         self.metadata = self.current['metadata']
