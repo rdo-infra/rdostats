@@ -1,6 +1,6 @@
 python-bugzilla
 mistune
-arrow
+arrow >= 0.5.4
 jinja2
 requests
 cliff
