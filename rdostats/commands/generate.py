@@ -37,8 +37,6 @@ class Generate(Command):
         with open(args.data) as fd:
             data = json.load(fd)
 
-        print data
-
         date = arrow.get(data['metadata']['date']).format('YYYYMMDD')
         workdir = os.path.join(basedir, date)
         if not os.path.isdir(workdir):
