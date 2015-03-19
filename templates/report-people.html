@@ -1,0 +1,53 @@
+{% extends 'page.html' %}
+{% import 'macros.html' as macros %}
+
+{% block head %}
+<script src="../assets/jquery.js"></script>
+<script src="../assets/tablesorter.js"></script>
+<script>
+$(document).ready(function() 
+    { 
+        $("#people").tablesorter();
+    } 
+);
+</script>
+{% endblock %}
+
+{% block title %}
+{{report.metadata.product}} bug owners on {{report.metadata.date|format_date}}
+{% endblock %}
+
+
+{% block content %}
+
+<table id="people">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>No. of bugs</th>
+      <th>Average age</th>
+      <th>Average idle</th>
+      <th>Oldest</th>
+      <th>Oldest ID</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  {% for person in report.people.values() %}
+
+<tr>
+  <td>{{person.name}}</td>
+  <td>{{person.bugs}}</td>
+  <td>{{person.avg_age}}</td>
+  <td>{{person.avg_idle}}</td>
+  <td>{{person.oldest.creation_time|format_date}}</td>
+  <td><a href="{{person.oldest.weburl}}">{{person.oldest.id}}</a></td>
+</tr>
+
+{% endfor %}
+  </tbody>
+
+</table>
+
+{% endblock %}
+

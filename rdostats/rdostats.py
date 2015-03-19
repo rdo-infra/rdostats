@@ -40,6 +40,25 @@ def filter_markdown(value):
     return mistune.markdown(value)
 
 
+def age_of(bug):
+    now = arrow.utcnow()
+    created = arrow.get(bug['creation_time'])
+    return (now-created).days
+
+
+def idle_of(bug):
+    now = arrow.utcnow()
+    last_changed = arrow.get(bug['last_change_time'])
+    return (now-last_changed).days
+
+
+def oldest_of(b1, b2):
+    if b1 is None:
+        return b2
+
+    return min(b1, b2, key=lambda b: arrow.get(b['creation_time']))
+
+
 class RDOStats (object):
 
     def __init__(self, current,
@@ -74,6 +93,30 @@ class RDOStats (object):
     def process_data(self):
         self.metadata = self.current['metadata']
         self.date = arrow.get(self.current['metadata']['date'])
+        self.people = self.people_stats()
+
+    def people_stats(self):
+        counter = {}
+        for bug in self.bugs(status=self.status_open):
+            owner = bug['assigned_to']
+            if owner not in counter:
+                counter[owner] = {
+                    'name': owner,
+                    'bugs': 0,
+                    'avg_age': 0,
+                    'avg_idle': 0,
+                    'oldest': None,
+                }
+
+            x = counter[owner]
+            x['bugs'] += 1
+            x['avg_age'] = (
+                (x['avg_age'] + age_of(bug))/x['bugs'])
+            x['avg_idle'] += idle_of(bug)
+            x['oldest'] = oldest_of(x['oldest'], bug)
+
+        return counter
+
 
     def render(self, template_name, **kwargs):
         template = self.env.get_template(template_name)

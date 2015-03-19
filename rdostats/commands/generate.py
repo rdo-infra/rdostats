@@ -37,6 +37,8 @@ class Generate(Command):
         with open(args.data) as fd:
             data = json.load(fd)
 
+        print data
+
         date = arrow.get(data['metadata']['date']).format('YYYYMMDD')
         workdir = os.path.join(basedir, date)
         if not os.path.isdir(workdir):
@@ -52,7 +54,8 @@ class Generate(Command):
                                                          max_comp_len=25)
 
         for doc in ['index.html', 'report-grouped.html',
-                    'report-ungrouped.html', 'report.txt']:
+                    'report-ungrouped.html', 'report-people.html',
+                    'report.txt']:
             with open(os.path.join(workdir, doc), 'w') as fd:
                 LOG.info('generating %s', fd.name)
                 fd.write(report.render(doc))
