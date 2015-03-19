@@ -40,14 +40,16 @@ def filter_markdown(value):
     return mistune.markdown(value)
 
 
-def age_of(bug):
-    now = arrow.utcnow()
+def age_of(bug, now=None):
+    if now is None:
+        now = arrow.utcnow()
     created = arrow.get(bug['creation_time'])
     return (now-created).days
 
 
-def idle_of(bug):
-    now = arrow.utcnow()
+def idle_of(bug, now=None):
+    if now is None:
+        now = arrow.utcnow()
     last_changed = arrow.get(bug['last_change_time'])
     return (now-last_changed).days
 
@@ -93,29 +95,31 @@ class RDOStats (object):
     def process_data(self):
         self.metadata = self.current['metadata']
         self.date = arrow.get(self.current['metadata']['date'])
-        self.people = self.people_stats()
 
-    def people_stats(self):
+    def people(self, component=None, status=None):
         counter = {}
-        for bug in self.bugs(status=self.status_open):
+        now = arrow.utcnow()
+
+        for bug in self.bugs(component=component, status=status):
             owner = bug['assigned_to']
             if owner not in counter:
                 counter[owner] = {
                     'name': owner,
                     'bugs': 0,
-                    'avg_age': 0,
-                    'avg_idle': 0,
+                    'age': 0,
+                    'idle': 0,
                     'oldest': None,
                 }
 
             x = counter[owner]
             x['bugs'] += 1
-            x['avg_age'] = (
-                (x['avg_age'] + age_of(bug))/x['bugs'])
-            x['avg_idle'] += idle_of(bug)
+            x['age'] += age_of(bug, now)
+            x['idle'] += idle_of(bug, now)
+            x['avg_age'] = x['age']/x['bugs']
+            x['avg_idle'] = x['idle']/x['bugs']
             x['oldest'] = oldest_of(x['oldest'], bug)
 
-        return counter
+        return counter.values()
 
 
     def render(self, template_name, **kwargs):

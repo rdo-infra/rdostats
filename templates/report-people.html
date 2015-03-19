@@ -20,6 +20,11 @@ $(document).ready(function()
 
 {% block content %}
 
+{% filter markdown %}
+This is a report on open bugs (bugs in state {{report.status_open|join(', ')}}).
+Click on a column header to sort the data by that column.  Age and idle time are in days.
+{% endfilter %}
+
 <table id="people">
   <thead>
     <tr>
@@ -33,7 +38,7 @@ $(document).ready(function()
   </thead>
 
   <tbody>
-  {% for person in report.people.values() %}
+  {% for person in report.people(status=report.status_open) %}
 
 <tr>
   <td>{{person.name}}</td>
