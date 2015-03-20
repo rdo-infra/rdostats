@@ -22,7 +22,14 @@ $(document).ready(function()
 
 {% filter markdown %}
 This is a report on open bugs (bugs in state {{report.status_open|join(', ')}}).
-Click on a column header to sort the data by that column.  Age and idle time are in days.
+
+- **Average age**: Average length of time (in days) between the report
+  generation date and the `creation_time` attribute of the bug.
+- **Average idle**: Average length of time (in days) between the report
+  generation date and the `last_changed_time` attribute of the bug.
+- **Oldest**: Creation time of the oldest bug assigned to that owner.
+
+Click on a column header to sort the data by that column.
 {% endfilter %}
 
 <table id="people">
