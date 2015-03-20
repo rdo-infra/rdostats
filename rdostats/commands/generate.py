@@ -10,16 +10,33 @@ from rdostats.exc import *
 
 LOG = logging.getLogger(__name__)
 
+default_templates = ['index.html', 'report-grouped.html',
+                     'report-ungrouped.html', 'report.txt']
+
 
 class Generate(Command):
     def get_parser(self, prog_name):
         p = super(Generate, self).get_parser(prog_name)
         p.add_argument('--graph', '-g',
-                       action='store_true')
+                       action='store_true',
+                       help='Generate graph of no. of bugs by component')
+        p.add_argument('--owners', '-o',
+                       action='store_true',
+                       help='Generate report by owner')
         p.add_argument('--latest', '-l',
-                       action='store_true')
-        p.add_argument('--template-dir', '-T')
+                       action='store_true',
+                       help='Update latest symlink to point to this report')
+        p.add_argument('--template-dir', '-T',
+                       help='Location of template files')
+        p.add_argument('--template', '-t',
+                        action='append',
+                        help='Render a specific template')
+        p.add_argument('--no-components', '-C',
+                       action='store_false',
+                       dest='components',
+                       help='Generate per-component reports')
         p.add_argument('data', nargs='?')
+        p.set_defaults(components=True)
         return p
 
     def take_action(self, args):
@@ -51,19 +68,26 @@ class Generate(Command):
             report.attributes['graph'] = component_graph(report,
                                                          max_comp_len=25)
 
-        for doc in ['index.html', 'report-grouped.html',
-                    'report-ungrouped.html', 'report-people.html',
-                    'report.txt']:
-            with open(os.path.join(workdir, doc), 'w') as fd:
-                LOG.info('generating %s', fd.name)
-                fd.write(report.render(doc))
+        if args.template:
+            templates = args.template
+        else:
+            templates = default_templates
 
-        for comp in report.components():
-            with open(os.path.join(
-                    workdir, 'report-%s.html' % comp), 'w') as fd:
+        if args.owners:
+            templates.append('report-people.html')
+
+        for template in templates:
+            with open(os.path.join(workdir, template), 'w') as fd:
                 LOG.info('generating %s', fd.name)
-                fd.write(report.render('report-ungrouped.html',
-                                       component=comp))
+                fd.write(report.render(template))
+
+        if args.components:
+            for comp in report.components():
+                with open(os.path.join(
+                        workdir, 'report-%s.html' % comp), 'w') as fd:
+                    LOG.info('generating %s', fd.name)
+                    fd.write(report.render('report-ungrouped.html',
+                                           component=comp))
 
         if args.latest:
             latest = os.path.join(basedir, 'latest')
