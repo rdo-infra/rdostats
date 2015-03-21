@@ -46,7 +46,7 @@ To report a new bug against {{report.metadata.product}}, go to:
 {% for bug in report.bugs(comp, status=status) %}
 [{{"%-8s"|format(bug.id)}}] http://bugzilla.redhat.com/{{bug.id}} ({{bug.status}})  
            Component: {{bug.component}}  
-           Last change: {{bug.last_change_time|format_date}} ({{bug.last_change_time|humanize}})
+           Last change: {{bug.last_change_time|format_date}}
            Summary: {{bug.summary |
                       wordwrap(width=55, wrapstring='\n' + ' '*20)}}  
 {% endfor %}{% endif %}{% endfor %}{% endmacro -%}
