@@ -1,0 +1,36 @@
+{% extends 'page.html' %}
+{% import 'macros.html' as macros %}
+
+{% block title %}
+{{report.metadata.product}} bugs modified since
+{{report.metadata.date|format_date}}
+{% endblock %}
+
+
+{% block content %}
+<table>
+  <thead>
+  <tr>
+    <th>ID</th><th>Previous status</th><th>Current status</th>
+    <th>Resolution</th><th>Last change date</th>
+    <th>Last change by</th>
+  </tr>
+</thead>
+
+<tbody>
+{% for bug in report.bugs() %}
+{% if bug.status != bug.new_status %}
+<tr>
+  <td><a href="{{bug.weburl}}">{{bug.id}}</a></td>
+  <td>{{bug.status}}</td>
+  <td>{{bug.new_status}}</td>
+  <td>{{bug.resolution}}</td>
+  <td>{{bug.last_change_time|format_date}}</td>
+  <td>{% if bug.history %}{{bug.history[-1].who}}{% else %}<unknown>{% endif %}</td>
+</tr>
+{% endif %}
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}
+
