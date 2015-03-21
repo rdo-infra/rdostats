@@ -11,6 +11,7 @@
 <table>
   <thead>
   <tr>
+    <th>#</th>
     <th>ID</th><th>Previous status</th><th>Current status</th>
     <th>Resolution</th><th>Last change date</th>
     <th>Last change by</th>
@@ -18,9 +19,12 @@
 </thead>
 
 <tbody>
+{% set counter=0 %}
 {% for bug in report.bugs() %}
 {% if bug.status != bug.new_status %}
+{% set counter = counter+1 %}
 <tr>
+  <td>{{counter}}</td>
   <td><a href="{{bug.weburl}}">{{bug.id}}</a></td>
   <td>{{bug.status}}</td>
   <td>{{bug.new_status}}</td>
