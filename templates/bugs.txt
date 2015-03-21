@@ -1,3 +1,7 @@
 {% for bug in report.bugs() -%}
-{{"%-8s"|format(bug.id)}} {{"%-8s"|format(bug.status)}} {{bug.last_change_time|format_date}} {{bug.assigned_to}}
+{{"%-8s"|format(bug.id)}} {{
+  "%-8s"|format(bug.status)}} {{
+  bug.creation_time|format_date}} {{
+  bug.last_change_time|format_date}} {{
+  bug.assigned_to}}
 {% endfor %}
