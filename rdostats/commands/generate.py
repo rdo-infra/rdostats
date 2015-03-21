@@ -11,7 +11,8 @@ from rdostats.exc import *
 LOG = logging.getLogger(__name__)
 
 default_templates = ['index.html', 'report-grouped.html',
-                     'report-ungrouped.html', 'report.txt']
+                     'report-ungrouped.html',
+                     'report.txt', 'bugs.txt']
 
 
 class Generate(Command):
