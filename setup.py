@@ -18,6 +18,7 @@ setup(
         'rdostats': [
             'generate=rdostats.commands.generate:Generate',
             'fetch=rdostats.commands.fetch:Fetch',
+            'diff=rdostats.commands.diff:Diff',
         ],
     }
 )

@@ -14,6 +14,7 @@ fields = [
     'id',
     'keywords',
     'last_change_time',
+    'resolution',
     'status',
     'summary',
     'target_milestone',
@@ -44,3 +45,22 @@ def fetch_bugs(url=defaults.url,
         'bugs': bugs,
         'metadata': metadata,
     }
+
+
+def update_bugs(data, url=defaults.url):
+    bz = bugzilla.Bugzilla(url)
+    update = bz.getbugs([bug['id'] for bug in data['bugs']])
+    update = dict((bug.id, bug) for bug in update)
+
+    for bug in data['bugs']:
+        new_bug = update[bug['id']]
+        bug['new_status'] = new_bug.status
+        bug['resolution'] = new_bug.resolution
+        bug['last_change_time'] = (
+            arrow.get(new_bug.last_change_time.timetuple()))
+
+        if bug['status'] != new_bug.status:
+            bug['history'] = (
+                new_bug.get_history()['bugs'][0]['history'])
+
+    return data
