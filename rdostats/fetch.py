@@ -19,7 +19,6 @@ fields = [
     'summary',
     'target_milestone',
     'target_release',
-    'url',
     'version',
     'weburl',
 ]
