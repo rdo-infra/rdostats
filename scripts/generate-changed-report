@@ -1,0 +1,12 @@
+#!/bin/sh
+
+today=$(date +%Y%m%d)
+last_week=$(date -d '1 week ago' +%Y%m%d)
+
+if [ -d "$HOME/rdo/$last_week" ]; then
+	mkdir -p $today
+	$HOME/env/bin/rdostats -f $HOME/rdostats.yaml diff \
+		$HOME/rdo/$last_week/bugs.json \
+		> $today/report-changed.html
+fi
+

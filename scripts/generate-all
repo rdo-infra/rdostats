@@ -1,0 +1,8 @@
+#!/bin/sh
+
+rm -rf $HOME/reports/*
+for DATA in $HOME/data/rdo/*.json; do
+	echo $DATA
+	$HOME/bin/generate-rdo-report $DATA
+done
+

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd $HOME/rdo
+find * -name bugs.json -print |
+xargs -n1 $HOME/env/bin/rdostats -f $HOME/rdostats.yaml generate -gl

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+cd $HOME/rdo
+
+$HOME/bin/fetch-rdo-bugs
+$HOME/bin/generate-rdo-report
+$HOME/bin/generate-changed-report
+
+[ "$NOCOMMIT" ] && exit 0
+
+if git ls-files -omd --error-unmatch --exclude-standard . > /dev/null 2>&1; then
+git add -A
+git commit -m "Automatic commit after generating reports @ $(date)"
+git push
+git update-server-info
+fi
+
