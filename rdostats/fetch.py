@@ -26,13 +26,14 @@ fields = [
 
 def fetch_bugs(url=defaults.url,
                product=defaults.product,
-               status=defaults.status_all):
-    bz = bugzilla.Bugzilla(url)
-    bugs = bz.query(bz.build_query(
-        product=product,
-        status=status))
+               status=defaults.status_all,
+               bugfilter=None):
 
-    bugs = [dict(((k, getattr(bug, k)) for k in fields)) for bug in bugs]
+    bz = bugzilla.Bugzilla(url)
+    bugs = bz.query(bz.build_query(product=product, status=status))
+    bugs = [dict(((k, getattr(bug, k)) for k in fields))
+            for bug in bugs
+            if bugfilter is None or bugfilter(bug)]
     metadata = {
         'url': url,
         'product': product,
