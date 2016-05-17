@@ -21,11 +21,25 @@ def json_default(obj):
 
 class Fetch(Command):
 
+    def get_parser(self, prog_name):
+        p = super(Fetch, self).get_parser(prog_name)
+
+        p.add_argument('--untriaged', '-u',
+                       action='store_true')
+
+        return p
+
     def take_action(self, args):
         date = arrow.now().format('YYYYMMDD')
+        bugfilter = None
+
+        if args.untriaged:
+            bugfilter = lambda bug: 'Triaged' not in bug.keywords
+
         data = fetch_bugs(
             url=self.app.config['bugzilla']['url'],
             product=self.app.config['bugzilla']['product'],
+            bugfilter=bugfilter
             )
 
         workdir = os.path.join(self.app.config['basedir'], date)
